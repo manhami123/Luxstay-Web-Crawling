@@ -3,7 +3,7 @@
  </p>
 <p align="center">Luxstay Web Crawler</p>
 
-# Tính năng - Feature
+# Tính năng - Features
 - Lấy dữ liệu về homestay theo các tỉnh/thành - Crawl the homestay data by province/city name
 - Tự động xuất file csv theo tên tỉnh/thành bạn chọn - Automatical export csv file depend on province/city name you chose
 
