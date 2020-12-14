@@ -4,6 +4,7 @@ import string
 import re
 import csv
 import pandas as pd
+import winsound
 
 # Main menu
 mainMenu = {
@@ -43,7 +44,7 @@ for x in mainMenu:
 i = int(input("Chọn địa điểm: "))
 
 # Open webdriver
-browser = webdriver.Edge(executable_path="E:/Coding_WorkSpace/NLCS/Luxstay_new/msedgedriver.exe")
+browser = webdriver.Edge(executable_path="D:/Coding_WorkSpace/NLCS/Luxstay_new/msedgedriver.exe")
 browser.get("https://luxstay.com/vi/s")
 time.sleep(10)
 
@@ -83,8 +84,9 @@ browser.switch_to_window(browser.window_handles[1])
 time.sleep(7)
 page = browser.find_element_by_css_selector('div[class="mt--12 mb--12 text--center text-lowercase"]').text
 numofLoop = int(int(page[16:-6])/20)
-c = 0
+
 # GET RAW_DATA:
+c = 0
 while(True):
         # 1. Room Name
     names = browser.find_elements_by_css_selector('div[class="promo__title"]')
@@ -105,7 +107,7 @@ while(True):
     promo = browser.find_elements_by_css_selector('div[class="is-absolute promo__label-wrap"]')
     for element in promo:
         promotion_raw.append(element.text)
-    time.sleep(0.5)
+    time.sleep(1)
     c+=1
     if c < numofLoop+1:
         # Click the Next-button:
@@ -128,10 +130,19 @@ for prm in promotion_raw:
         promotion.append(int(prm[1:-9])/100)
 
     # 3. RoomType:
+roomtype_dict = {
+    'Chung cư': 1,
+    'Nhà riêng': 2,
+    'Homestay': 3,
+    'Căn hộ dịch vụ': 4,
+    'Studio': 5,
+    'Biệt thự':6
+}
 for e in type_N_rating_raw:
     sub_str = e.split('\n')
     type_sub = sub_str[0].split(" - ")
-    roomType.append(type_sub[0])
+    if type_sub[0] in roomtype_dict:
+        roomType.append(roomtype_dict.get(type_sub[0]))
 
     # 4. Bedroom:
     bedroom_sub = type_sub[1].split(" ")
@@ -153,7 +164,7 @@ for rv in review:
 
     # 7. Room names
 for n in roomName_raw:
-    n1 = re.sub('⭐|★|❤|✨|✳️|☂️|❣|❁‿❁|❀|♥️|☃️|❄️|✿|♕|✿|❦|☆|♛|⚡|❃|乂|🌸|✯|🥀|🥳', '', n)
+    n1 = re.sub('⭐|★|❤|✨|✳️|☂️|❣|❁‿❁|❀|♥️|☃️|❄️|✿|♕|✿|❦|☆|♛|⚡|❃|乂|🌸|✯|🥀|🥳|<|p|>|strong|/|☀', '', n)
     n2 = re.sub('"|,|❣️|✩|☘️|♥|⚜️|⛩️', " ", n1)
     roomName.append(n2)
 
@@ -162,29 +173,34 @@ for n in roomName_raw:
 # Write out csv file
 rows = zip(roomName, roomType, bedroom, roomPrice, score, reviews, promotion)
 header = ['name', 'type', 'bedroom', 'price', 'score', 'review', 'promo']
+
 # Name the file depend on we input
 def csv_name(csv_n):
     if csv_n == 1:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_hanoi.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_hanoi.csv'
     elif csv_n == 2:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_tphcm.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_tphcm.csv'
     elif csv_n == 3:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_hoian.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_hoian.csv'
     elif csv_n == 4:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_dalat.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_dalat.csv'
     elif csv_n == 5:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_danang.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_danang.csv'
     elif csv_n == 6:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_nhatrang.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_nhatrang.csv'
     elif csv_n == 7:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_vungtau.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_vungtau.csv'
     else:
-        name = 'E:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_quangninh.csv'
+        name = 'D:\\Coding_WorkSpace\\NLCS\\csv\\luxstay_quangninh.csv'
     return name
 
 name = csv_name(i)
 df = pd.DataFrame(rows)
 df.to_csv(name, index=True, header=header)
+
 time.sleep(7)
 
 browser.close()
+for sound in range(3):
+    winsound.Beep(3000, 600)
+
