@@ -5,7 +5,7 @@
 
 # Tính năng - Features
 - Lấy dữ liệu về homestay theo các tỉnh/thành - Crawl the homestay data by province/city name
-- Tự động xuất file csv theo tên tỉnh/thành bạn chọn - Automatical export csv file depend on province/city name you chose
+- Tự động xuất file csv theo tên tỉnh/thành bạn chọn - Export automatical csv file depends on province/city name you chose
 
 # Lưu ý - Notes
 - Tải và cài đặt driver trình duyệt theo trình duyệt bạn đang sử dụng - Download and install the browser driver according the one you are using
